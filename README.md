@@ -38,7 +38,8 @@ TBD
 
 ## Architecture
 
-This project is a small Java test automation project containing test cases
+This project is a small Java test automation project
+containing [JUnit 5](https://junit.org/junit5/) test cases
 for an [Applitools demo site](https://demo.applitools.com).
 It uses [Apache Maven](https://search.maven.org/) for dependency management.
 Each test case covers the same login behavior, but they do so in different ways:
