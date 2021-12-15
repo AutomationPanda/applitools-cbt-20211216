@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Arrays;
@@ -25,7 +26,17 @@ public class TraditionalTest
     @BeforeEach
     public void startWebDriver()
     {
-        driver = new ChromeDriver();
+        String browserName = System.getenv().getOrDefault("BROWSER", "chrome");
+
+        if (browserName.equalsIgnoreCase("firefox"))
+        {
+            driver = new FirefoxDriver();
+        }
+        else
+        {
+            driver = new ChromeDriver();
+        }
+
         wait = new WebDriverWait(driver, 15);
     }
 

@@ -55,10 +55,15 @@ To complete this workshop, you will need:
 
 1. An Applitools account
    (register [here](https://auth.applitools.com/users/register) for free)
-2. [Java Development Kit](https://www.oracle.com/java/technologies/downloads/) (JDK) 17
-3. [Google Chrome](https://www.google.com/chrome/) (up-to-date version)
-4. [ChromeDriver](https://chromedriver.chromium.org/) (matching version installed on system path)
-5. A Java IDE like [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+2. [Java Development Kit](https://www.oracle.com/java/technologies/downloads/) (JDK) 17 
+3. A Java IDE like [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+4. [Google Chrome](https://www.google.com/chrome/)
+   * The up-to-date version of the browser
+   * The matching version of [ChromeDriver](https://chromedriver.chromium.org/) installed on system path
+5. [Mozilla Firefox](https://www.mozilla.org/en-US/firefox/new/)
+   * The up-to-date version of the browser
+   * The matching version of [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on the system path
+
 
 
 ## Running tests
