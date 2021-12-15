@@ -67,8 +67,8 @@ Each test case covers the same login behavior, but they do so in different ways:
 
 ## Running tests
 
-The easiest way to run the tests is through an IDE.
-Alternatively, to run the tests using Maven, run the `mvn test` command.
+The easiest way to run the tests is one at a time through an IDE.
+Alternatively, you can run the tests from the command line with Maven using the `mvn test` command.
 
 `TraditionalTest` runs WebDriver sessions on the local machine.
 Each test launch can target either Google Chrome or Mozilla Firefox.
