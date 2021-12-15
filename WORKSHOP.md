@@ -224,13 +224,42 @@ Try running with `DEMO_SITE=changed` – the test will still pass!
 
 ### 1.3 Updating the test to handle multiple browsers
 
-SCREENSHARE
+Right now, `TraditionalTest` targets only one browser: Chrome.
+That's not good practice.
+We should be able to run this test against *any* browser.
 
-* Recommended practice: one test launch points to one browser
-* Parameterizing tests becomes sloppy and repetitive
-* Theoretically, any site should run on any browser
-* Update setup to switch between Chrome and Firefox
-* Run it once with Firefox
+One way to test multiple browsers is to parameterize tests to run against a set of configurations.
+Unfortunately, this is typically not good practice for traditional tests.
+Most test frameworks parameterize at the level of the test case,
+so testers would need to duplicate browser specs for each test.
+Plus, as browser needs change in the future,
+testers would need to change lots of this parameterization code.
+
+A better practice for traditional tests is for every test suite launch to target *one* browser configuration,
+and for testers to select the target browser as an input to automation.
+For example, we can update the `startWebDriver` method to dynamically pick a browser like this:
+
+```java
+    @BeforeEach
+    public void startWebDriver()
+    {
+        String browserName = System.getenv().getOrDefault("BROWSER", "chrome");
+
+        driver = browserName.equalsIgnoreCase("firefox")
+            ? new FirefoxDriver()
+            : new ChromeDriver();
+
+        wait = new WebDriverWait(driver, 15);
+    }
+```
+
+This method now reads an environment variable named `BROWSER`.
+If `BROWSER=firefox`, then the test will target Firefox.
+Otherwise, it will target Chrome.
+We could add other browser types and even other input configurations like this.
+
+Try running it once with Firefox.
+It should work just fine, and the test should pass.
 
 
 ### 1.4 Scaling out cross-browser testing yourself
