@@ -39,8 +39,8 @@ for faster and immediate feedback.
    1. Writing a typical login test
    2. Running the test locally
    3. Updating the test to handle multiple browsers
-   4. Scaling out cross-browser testing
-   5. Struggling to maintain proper testing
+   4. Scaling out cross-browser testing yourself
+   5. Scaling out cross-browser testing as a service
 2. Modern cross-browser testing
    1. Reconsidering what should be tested
    2. Introducing Applitools Ultrafast Grid
