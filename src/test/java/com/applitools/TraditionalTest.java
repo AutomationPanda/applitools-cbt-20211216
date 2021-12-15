@@ -17,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TraditionalTest
 {
-    private final String DEMO_SITE_URL = "https://demo.applitools.com";
-    private final String DEMO_SITE_CHANGED_URL = "https://demo.applitools.com/index_v2.html";
-
     private WebDriver driver;
     private WebDriverWait wait;
 
@@ -28,14 +25,9 @@ public class TraditionalTest
     {
         String browserName = System.getenv().getOrDefault("BROWSER", "chrome");
 
-        if (browserName.equalsIgnoreCase("firefox"))
-        {
-            driver = new FirefoxDriver();
-        }
-        else
-        {
-            driver = new ChromeDriver();
-        }
+        driver = browserName.equalsIgnoreCase("firefox")
+            ? new FirefoxDriver()
+            : new ChromeDriver();
 
         wait = new WebDriverWait(driver, 15);
     }
@@ -49,9 +41,7 @@ public class TraditionalTest
     @Test
     public void login()
     {
-        // Change the `loadLoginPage` argument between true and false to change page visuals
-
-        loadLoginPage(true);
+        loadLoginPage();
         verifyLoginPage();
         performLogin();
         verifyMainPage();
@@ -62,9 +52,14 @@ public class TraditionalTest
         wait.until(d -> d.findElements(locator).size() > 0);
     }
 
-    private void loadLoginPage(boolean original)
+    private void loadLoginPage()
     {
-        driver.get(original ? DEMO_SITE_URL : DEMO_SITE_CHANGED_URL);
+        String site = System.getenv().getOrDefault("DEMO_SITE", "original");
+
+        if (site.equals("original"))
+            driver.get("https://demo.applitools.com");
+        else
+            driver.get("https://demo.applitools.com/index_v2.html");
     }
 
     private void verifyLoginPage()
