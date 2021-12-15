@@ -8,6 +8,8 @@ led by [Pandy Knight](https://twitter.com/AutomationPanda)
 and hosted by [Applitools](https://applitools.com/)
 on December 16, 2021.
 
+Full instructions for the workshop are provided in [`WORKSHOP.md`](WORKSHOP.md).
+
 
 ## Abstract
 
@@ -33,14 +35,13 @@ for faster and immediate feedback.
 
 ## Outline
 
-1. Orientation
-2. Traditional cross-browser testing
+1. Traditional cross-browser testing
    1. Writing a typical login test
    2. Running the test locally
    3. Updating the test to handle multiple browsers
    4. Scaling out cross-browser testing
    5. Struggling to maintain proper testing
-3. Modern cross-browser testing
+2. Modern cross-browser testing
    1. Reconsidering what should be tested
    2. Introducing Applitools Ultrafast Grid
    3. Rewriting login as a visual test
