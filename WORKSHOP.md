@@ -1,6 +1,6 @@
 ![Modern Cross-Browser Testing Workshop](images/modern-cbt-banner.png)
 
-# Workshop Instructions
+# Workshop Walkthrough
 
 This guide provides a full written walkthrough for the
 [Modern Cross-Browser Testing](https://applitools.com/crossbrowser-testing-workshop/) workshop
