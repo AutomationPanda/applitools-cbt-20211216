@@ -36,19 +36,6 @@ for faster and immediate feedback.
 TBD
 
 
-## Architecture
-
-This project is a small Java test automation project
-containing [JUnit 5](https://junit.org/junit5/) test cases
-for an [Applitools demo site](https://demo.applitools.com).
-It uses [Apache Maven](https://search.maven.org/) for dependency management.
-Each test case covers the same login behavior, but they do so in different ways:
-
-1. One runs the test using traditional assertions on the local machine.
-2. One runs the test using Visual AI with [Applitools Eyes](https://applitools.com/products-eyes/)
-   and [Ultrafast Grid](https://applitools.com/product-ultrafast-test-cloud/).
-
-
 ## Prerequisites
 
 To complete this workshop, you will need:
@@ -65,7 +52,36 @@ To complete this workshop, you will need:
    * The matching version of [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on the system path
 
 
+## Architecture
+
+This project is a small Java test automation project
+containing [JUnit 5](https://junit.org/junit5/) test cases
+for an [Applitools demo site](https://demo.applitools.com).
+It uses [Apache Maven](https://search.maven.org/) for dependency management.
+Each test case covers the same login behavior, but they do so in different ways:
+
+1. `TraditionalTest` covers login using traditional assertions on a local machine.
+2. `UltrafastVisualTest` covers login using Visual AI with [Applitools Eyes](https://applitools.com/products-eyes/)
+   and [Ultrafast Grid](https://applitools.com/product-ultrafast-test-cloud/).
+
 
 ## Running tests
 
-TBD
+The easiest way to run the tests is through an IDE.
+Alternatively, to run the tests using Maven, run the `mvn test` command.
+
+`TraditionalTest` runs WebDriver sessions on the local machine.
+Each test launch can target either Google Chrome or Mozilla Firefox.
+Set the `BROWSER` environment variable to `chrome` or `firefox` to choose the browser.
+
+`UltrafastVisualTest` runs one WebDriver session on the local machine with Applitools Eyes.
+Then, it sends snapshots of pages to Applitools Ultrafast Grid to visually test across seven unique configurations.
+To connect to the Applitools cloud,
+you must set the `APPLITOOLS_API_KEY` environment variable to your Applitools API key.
+
+Both tests can cover the "original" state of the demo site as well as a visually "changed" state.
+Set the `DEMO_SITE` environment variable to `original` or `changed` to pick the target site.
+`TraditionalTest` should pass for both versions of the site.
+`UltrafastVisualTest` should detect visual differences.
+Run it first with `DEMO_SITE=original` to set a baseline,
+and then run it with `DEMO_SITE=changed` to reveal the differences.
