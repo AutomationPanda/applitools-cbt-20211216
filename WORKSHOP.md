@@ -18,7 +18,7 @@ both in automating test cases and in maintaining testing infrastructure.
 Let's give this a try ourselves to see what it takes.
 
 
-### Writing a typical login test
+### 1.1 Writing a typical login test
 
 Web UI testing is all about app behaviors:
 interacting with visual interfaces and verifying outcomes.
@@ -175,7 +175,7 @@ They also do *not* cover everything on the page.
 There's risk that unchecked things could break.
 
 
-### Running the test locally
+### 1.2 Running the test locally
 
 Let's run this test locally.
 The easiest way to run the tests is one at a time through an IDE.
@@ -222,7 +222,7 @@ to control which page the test will target.
 Try running with `DEMO_SITE=changed` – the test will still pass!
 
 
-### Updating the test to handle multiple browsers
+### 1.3 Updating the test to handle multiple browsers
 
 SCREENSHARE
 
@@ -233,7 +233,7 @@ SCREENSHARE
 * Run it once with Firefox
 
 
-### Scaling out cross-browser testing yourself
+### 1.4 Scaling out cross-browser testing yourself
 
 SLIDES
 
@@ -251,7 +251,7 @@ SLIDES
 * Image: VW Beetle maintenance
 
 
-### Scaling out cross-browser testing as a service
+### 1.5 Scaling out cross-browser testing as a service
 
 SLIDES
 
@@ -274,7 +274,7 @@ Let's rethink our approach in what we want to test
 and how techniques like visual testing can simplify things.
 
 
-### Reconsidering what should be tested
+### 2.1 Reconsidering what should be tested
 
 SLIDES
 
@@ -285,7 +285,7 @@ SLIDES
 * Those are the things that are different across browsers
 
 
-### Introducing Applitools Ultrafast Grid
+### 2.2 Introducing Applitools Ultrafast Grid
 
 SLIDES
 
@@ -295,7 +295,7 @@ SLIDES
 * Check any browsers and platforms you want
 
 
-### Rewriting login as a visual test
+### 2.3 Rewriting login as a visual test
 
 SCREENSHARE
 
@@ -306,7 +306,7 @@ SCREENSHARE
 * Show how assertions are simplified: "A picture is worth a thousand assertions."
 
 
-### Running visual tests across multiple browsers
+### 2.4 Running visual tests across multiple browsers
 
 SCREENSHARE
 
@@ -319,7 +319,7 @@ SCREENSHARE
 * Highlight advantages: speed, simplicity, accuracy
 
 
-### Integrating modern cross-browser testing with CI/CD
+### 2.5 Integrating modern cross-browser testing with CI/CD
 
 SLIDES
 SCREENSHARE (if we include GitHub Actions)
