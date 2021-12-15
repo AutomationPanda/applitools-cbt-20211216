@@ -167,6 +167,7 @@ The test picks a few important things and makes several assertions:
     }
 ```
 
+Wow, that's a little overwhelming.
 Some assertions just check that elements appear.
 Others check aspects of elements, like text values.
 Nevertheless, the element locators and the code for performing these assertions are a bit complex.
@@ -176,11 +177,49 @@ There's risk that unchecked things could break.
 
 ### Running the test locally
 
-SCREENSHARE
+Let's run this test locally.
+The easiest way to run the tests is one at a time through an IDE.
+Alternatively, you can run the tests from the command line with Maven using the `mvn test` command.
+Just make sure that you have an up-to-date version of [Google Chrome](https://www.google.com/chrome/)
+installed on your machine with matching version of [ChromeDriver](https://chromedriver.chromium.org/)
+installed on your system path.
+The test should take a few minutes total, and it should pass.
 
-* Run the test with Chrome
-* Remember to have ChromeDriver installed
-* Yay, it passes
+Unfortunately, this test overlooks visual things.
+For example, consider what would happen if the login page looked like this instead:
+
+![Demo site login page changed](images/demo-site-login-changed.png)
+
+Can you spot the subtle differences?
+
+* The icon at the top is broken
+* The "Sign in" button now says "Log in"
+* This button changed from blue to black
+
+Traditional test automation struggles to detect differences like these.
+We could try to add more assertions to our test,
+but they'd probably be complicated and fragile.
+For now, let's take a risk and ignore them.
+(We will revisit ways to handle them better later in this workshop.)
+
+If we want to run this test against either version of the login page,
+we could update the `loadLoginPage` method like this:
+
+```java
+    private void loadLoginPage()
+    {
+        String site = System.getenv().getOrDefault("DEMO_SITE", "original");
+
+        if (site.equals("original"))
+            driver.get("https://demo.applitools.com");
+        else
+            driver.get("https://demo.applitools.com/index_v2.html");
+    }
+```
+
+Then, we could set the `DEMO_SITE` environment variable to `original` or `changed`
+to control which page the test will target.
+Try running with `DEMO_SITE=changed` – the test will still pass!
 
 
 ### Updating the test to handle multiple browsers
