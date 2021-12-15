@@ -264,20 +264,81 @@ It should work just fine, and the test should pass.
 
 ### 1.4 Scaling out cross-browser testing yourself
 
-SLIDES
+Local testing is fine while developing automated tests,
+but it's not good practice for running tests "for real."
+Local machines have limits:
 
-* Local testing has limits: browser choices, versions, and parallel scale
-* Show device count somehow
-* Anecdotal optimal execution time: 1 web test per processor/core
-* You could build your own Selenium Grid
-* I did this at Q2; share the case study
-* VMs running in Azure with scripts to power on and off
-* Tests ran fast, but startup took a few minutes
-* Figuring it all out took MONTHS
-* We had to be picky about our browser choices (thankfully, no mobile)
-* Maintenance was a CHORE (every Chrome update)
-* Random crashes happened that are hard to debug
-* Image: VW Beetle maintenance
+![Local testing limits](images/slide-local-testing-limits.png)
+
+* Not all browsers are supported on all operating systems.
+  For example, Safari does not run on Windows, and IE 11 does not run on macOS.
+* One machine can have only one version of a browser at a time,
+  unless you make some questionable hacks.
+* One machine can run only a limited number of tests in parallel.
+  Optimal execution time is typically 1 web test per processor/core.
+* Laptops are not mobile devices.
+  Either you emulate mobile devices or connect remotely to physical devices.
+
+Ideally, web UI tests should be run from a Continuous Integration system
+with scaled-out infrastructure to handle cross-browser testing.
+
+One way to do this is to build the infrastructure yourself.
+If your tests use Selenium WebDriver, then you can build a
+[Selenium Grid](https://www.selenium.dev/documentation/grid/) instance.
+Selenium Grid is an open-source tool for creating a cluster of nodes
+that can run WebDriver browser sessions.
+Each node can have its own operating system, browsers, and versions installed.
+The grid receives requests for browser sessions and connects the requester to a node.
+
+![Selenium Grid 3 architecture](images/slide-selenium-grid-3.png)
+
+I did this when I worked at [Q2](https://www.q2.com/).
+You can read all about it in a case study I wrote in collaboration with [Tricentis](https://www.tricentis.com/):
+[How Q2 uses BDD with SpecFlow for testing PrecisionLender](https://automationpanda.com/2021/09/21/how-q2-uses-bdd-with-specflow-for-testing-precisionlender/).
+Basically, we created multiple Selenium Grid instances using Windows virtual machines in Microsoft Azure.
+When tests launched, TeamCity (our CI system) ran PowerShell scripts to power on the VMs.
+The grid would take a few minutes to boot.
+Then, once tests completed, TeamCity ran PowerShell scripts to power off the VMs to save money.
+Since we tightly controlled the grids, tests ran just as fast as they did on our local laptops.
+We could scale up to 100 parallel tests.
+
+However, even though Selenium Grid is open source, DIY grids are not "free".
+Figuring out correct setup, security policies, and performance tuning took our team *months*.
+It truly was never a finished project because we kept needing to make adjustments as our suites grew.
+We also had to set up and configure everything manually.
+Any time a browser update came along, we needed to log into every VM and make updates.
+
+On top of perpetual maintenance, our grids would arbitrarily crash from time to time.
+Hubs would go unresponsive.
+Browser sessions on nodes would freeze.
+Debugging these issues was practically impossible, too.
+Usually, all we could do was just relaunch test suites.
+
+My team and I could manage our own Selenium Grid instances because we kept our configuration streamlined.
+We only ever tested Chrome.
+We were more interested in speed than cross-browser coverage.
+Nevertheless, 75% of our customers used IE 11,
+and we took a steep risk by avoiding IE testing just to keep our infrastructure manageable.
+
+![Screen combination explosion](images/slide-screen-explosion.png)
+
+True cross-browser testing has a combinatorial explosion of screens to cover.
+Think about every browser, OS, platform, and version.
+Then, think about every page, viewport, and even language.
+That's enormous!
+Building your own grid, you can accommodate some of these, but not all.
+
+![1970 Volkswagen Beetle maintenance](images/vw-beetle.jpg)
+
+I liken managing your own Selenium Grid to maintaining a classic car.
+Personally, I'm the proud owner of a vintage 1970 Volkswagen Beetle.
+Even though classic cars are cool, they take *lots* of effort to keep running.
+I need to regularly change the oil, adjust the valves, tune the carburetor,
+seal rusty spots, replace fuel filters, and watch for engine leaks.
+Sadly, one time, I was not careful, and my engine overheated, which completely ruined it.
+I had to spend thousands of dollars on a whole new engine build.
+Modern cars don't require this much hands-on care.
+Classic cars, like DIY grids, need time, expertise, and effort.
 
 
 ### 1.5 Scaling out cross-browser testing as a service
