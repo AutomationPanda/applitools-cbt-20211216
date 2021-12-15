@@ -12,7 +12,7 @@ on December 16, 2021.
 ## Abstract
 
 As organizations double down on digital,
-the concept of quality has evolved from “does it work” to “is it the best experience”
+the concept of quality has evolved from "does it work" to "is it the best experience"
 — but the race to deliver innovation to market faster than the competition is causing challenges for software teams.
 
 More frequent releases multiplied by an explosion of device/browser combinations and increased application complexity
@@ -33,7 +33,19 @@ for faster and immediate feedback.
 
 ## Outline
 
-TBD
+1. Orientation
+2. Traditional cross-browser testing
+   1. Writing a typical login test
+   2. Running the test locally
+   3. Updating the test to handle multiple browsers
+   4. Scaling out cross-browser testing
+   5. Struggling to maintain proper testing
+3. Modern cross-browser testing
+   1. Reconsidering what should be tested
+   2. Introducing Applitools Ultrafast Grid
+   3. Rewriting login as a visual test
+   4. Running visual tests across multiple browsers
+   5. Integrating modern cross-browser testing with CI/CD
 
 
 ## Prerequisites
@@ -57,7 +69,8 @@ To complete this workshop, you will need:
 This project is a small Java test automation project
 containing [JUnit 5](https://junit.org/junit5/) test cases
 for an [Applitools demo site](https://demo.applitools.com).
-It uses [Apache Maven](https://search.maven.org/) for dependency management.
+It uses [Selenium WebDriver](https://www.selenium.dev/documentation/webdriver/) for browser interactions
+and [Apache Maven](https://search.maven.org/) for dependency management.
 Each test case covers the same login behavior, but they do so in different ways:
 
 1. `TraditionalTest` covers login using traditional assertions on a local machine.
