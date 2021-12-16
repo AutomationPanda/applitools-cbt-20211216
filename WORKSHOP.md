@@ -369,13 +369,20 @@ and how techniques like visual testing can simplify things.
 
 ### 2.1 Reconsidering what should be tested
 
-SLIDES
+What is the purpose of testing apps across multiple browsers?
+Historically, browsers were radically different.
+The JavaScript on one page would literally function differently in different browsers.
+These days, however, browsers have largely standardized on JavaScript.
+Traditional functional testing in one browser is typically good enough to verify that.
+Cross-browser testing should focus on the visuals of rendering and responsiveness.
 
-* What's the purpose of "cross-browser testing"?
-* CBT makes sure that web apps work in different environments
-* These days, browsers have standardized on JavaScript functionality
-* It's more important to test rendering, visuals, and responsiveness
-* Those are the things that are different across browsers
+Here are some examples of visual blunders that traditional automated testing would miss:
+
+![Visual bug 1](images/slide-visual-bug-1.png)
+
+![Visual bug 2](images/slide-visual-bug-2.png)
+
+![Visual bug 3](images/slide-visual-bug-3.png)
 
 
 ### 2.2 Introducing Applitools Ultrafast Grid
