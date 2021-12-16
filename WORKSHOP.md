@@ -343,18 +343,21 @@ Classic cars, like DIY grids, need time, expertise, and effort.
 
 ### 1.5 Scaling out cross-browser testing as a service
 
-SLIDES
+Instead of building your own infrastructure,
+you can pay a vendor to provide it for you.
+A vendor handles all the screen combinations for you.
+Your test simply needs to declare what you want for your remote WebDriver session.
+Vendor platforms also typically have nice features like dashboards, screenshots, and videos.
 
-* Vendors make it a little easier to run cross-browser testing
-* Less setup and maintenance time
-* They provide all the browser, OS, and platform combos
-* They also provide nice features like dashboards, screenshots, and videos
-* But tests run much slower: anecdotally 2-4x slowdown
-* It's also very, very expensive
-* It's also sometimes unreliable! (esp. for mobile?)
-* Security is challenging because communication must go two ways
-* It's still hard to debug
-* I've used Sauce Labs, CrossBrowserTesting, and LambdaTest
+![Traditional cross-browser testing is broken](images/slide-cbt-is-broken.png)
+
+Unfortunately, traditional cross-browser-testing-as-a-service still has problems.
+Difficulties with security, debuggability, and reliability are the same as for DIY grids.
+Tests also run much slower because they need to communicate with a more distant session.
+Anecdotally, my tests have taken 2-4x more time to complete versus running locally or in my own grid.
+That's *huge*.
+Furthermore, cross-browser vendor services can be quite expensive,
+and they set ceilings on your level of scale with your service plans.
 
 
 ## 2. Modern cross-browser testing
