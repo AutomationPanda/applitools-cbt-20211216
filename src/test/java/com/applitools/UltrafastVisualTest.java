@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class UltrafastVisualTest
 {
@@ -28,7 +29,7 @@ public class UltrafastVisualTest
     public void setUpVisualAI()
     {
         // Prepare Eyes and Ultrafast Grid for Selenium WebDriver
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(new ChromeOptions().setHeadless(true));
         runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));
         eyes = new Eyes(runner);
 
