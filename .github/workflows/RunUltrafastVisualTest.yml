@@ -1,0 +1,27 @@
+name: Run UltrafastVisualTest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use java ${{ matrix.java-version }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+          distribution: 'adopt'
+
+      - name: Install dependencies
+        run: mvn install
+
+      - name: Run Test
+        run: mvn -Dtest=UltrafastVisualTest test
+        env:
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+          BASEURL: https://demo.applitools.com
+          USE_GRID: true
