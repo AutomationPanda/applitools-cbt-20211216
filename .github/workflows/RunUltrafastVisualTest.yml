@@ -16,9 +16,6 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
-      - name: Install dependencies
-        run: mvn install
-
       - name: Run test
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
