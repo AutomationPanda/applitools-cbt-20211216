@@ -456,12 +456,17 @@ and `Eyes` for capturing snapshots.
 Second, we need to rewrite our setup.
 Our original test constructed a WebDriver instance based on an input for browser name.
 For the visual test, we can just pick one browser to run locally (such as Chrome)
-and also initialize the Applitools stuff:
+and also initialize the Applitools stuff.
+Let's also make it possible to run headless Chrome:
 
 ```java
     @BeforeEach
     public void setUpVisualAI()
     {
+        // Determine if Chrome should be headless
+        boolean headless = System.getenv().getOrDefault("HEADLESS", "false")
+            .equalsIgnoreCase("true");
+
         // Prepare Eyes and Ultrafast Grid for Selenium WebDriver
         driver = new ChromeDriver();
         runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));

@@ -1,4 +1,4 @@
-name: Run UltrafastVisualTest (Original)
+name: Run UltrafastVisualTest (Changed)
 
 on:
   workflow_dispatch:
@@ -19,6 +19,6 @@ jobs:
       - name: Run test
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-          DEMO_SITE: original
+          DEMO_SITE: changed
           HEADLESS: true
         run: mvn test -Dtest=com.applitools.UltrafastVisualTest
