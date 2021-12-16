@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+      - run: chrome --version
+
       - uses: actions/checkout@v2
 
       - name: Use java ${{ matrix.java-version }}
@@ -19,9 +23,8 @@ jobs:
       - name: Install dependencies
         run: mvn install
 
-      - name: Run Test
+      - name: Run test
         run: mvn -Dtest=UltrafastVisualTest test
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-          BASEURL: https://demo.applitools.com
-          USE_GRID: true
+          DEMO_SITE: original
