@@ -664,6 +664,13 @@ CI/CD systems can trigger tests automatically:
 * *periodically* on schedules (like every night)
 * *on demand* whenever users manually launch tests
 
+This repository is configured with GitHub Actions to run `UltrafastVisualTest`:
+
+* [Run UltrafastVisualTest (Original)](https://github.com/AutomationPanda/applitools-cbt-20211216/actions/workflows/RunUltrafastVisualTest.yml)
+  runs the test with the original pages.
+* [Run UltrafastVisualTest (Changed)](https://github.com/AutomationPanda/applitools-cbt-20211216/actions/workflows/RunUltrafastVisualTestChanged.yml)
+  runs the test with the changed pages to reveal visual failures.
+
 Ideally, teams want to get as many results as they can as quickly as possible.
 Fast feedback means that teams can resolve issues before they become more costly to fix.
 Unfortunately, traditional UI tests tend to be slow, especially with cross-browser variations.
