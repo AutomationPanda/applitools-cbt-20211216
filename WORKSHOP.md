@@ -57,19 +57,21 @@ this test class has `WebDriver` and `WebDriverWait` instance variables
 that are initialized before each test and cleaned up after each test:
 
 ```java
-public class TraditionalTest {
-    
+public class TraditionalTest
+{
     private WebDriver driver;
     private WebDriverWait wait;
 
     @BeforeEach
-    public void startWebDriver() {
+    public void startWebDriver()
+    {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, 15);
     }
 
     @AfterEach
-    public void quitWebDriver() {
+    public void quitWebDriver()
+    {
         driver.quit();
     }
     
@@ -81,7 +83,8 @@ The login test itself is broken down into parts with helper methods:
 
 ```java
     @Test
-    public void login() {
+    public void login()
+    {
         loadLoginPage();
         verifyLoginPage();
         performLogin();
@@ -387,46 +390,280 @@ Here are some examples of visual blunders that traditional automated testing wou
 
 ### 2.2 Introducing Applitools Ultrafast Grid
 
-SLIDES
+This is where Applitools can help
+with a modern solution for cross-browser testing:
+[Visual AI](https://applitools.com/applitools-ai-and-deep-learning/)
+with the [Ultrafast Grid](https://applitools.com/product-ultrafast-test-cloud/).
 
-* Visual testing with Ultrafast Grid!
-* Explain how it works
-* Snapshots in a single direction
-* Check any browsers and platforms you want
+![Applitools Ultrafast Grid](images/slide-ultrafast-grid.png)
+
+Visual testing is all about capturing snapshots of pages and inspecting them for differences.
+Notice how I used the word "snapshot," not "screenshot."
+Screenshots are just static pixel images.
+A *snapshot* is an instantaneous capture of the whole UI for a page: HTML, CSS, JavaScript, the works!
+Snapshots can be re-rendered in different browsers and screen size to test their responsiveness.
+
+Here's how we can rework our old login test into a visual test.
+First, we can add the [Applitools Eyes](https://applitools.com/products-eyes/) SDK
+to take visual snapshots of the login and main pages.
+We still need the Selenium WebDriver automation for interactions,
+but we can replace many (if not all) of the old assertions with visual checkpoints.
+Next, we can configure a runner to render those snapshots
+using multiple browsers and devices in Applitools Ultrafast Grid.
+The test will run once locally,
+but all cross-browser testing will be done in the Applitools Cloud with parallel execution.
+
+Since the only testing done in Ultrafast Grid is visual rendering and comparison, it's very fast.
+The infrastructure is also simpler because communication is a single direction
+from the test machine to the Applitools cloud.
+There's no back-and-forth communication like with a traditional functional test.
+
+You can use Applitools Eyes and the Ultrafast Grid with any automation tool or framework:
+Selenium, Appium, Playwright, Cypress, WebDriverIO, Nightwatch, and more.
+
+If you want specific data on how much faster and more efficient your testing can be
+with Visual AI and Applitools Ultrafast Grid,
+then check out this report:
+[Modern Cross Browser Testing Through Visual AI Report: 3,112 hours of empirical data sourced from 203 engineers](https://applitools.com/modern-cross-browser-testing-report/).
 
 
 ### 2.3 Rewriting login as a visual test
 
-SCREENSHARE
+Let's rewrite our login test into a visual test.
+The test steps can remain the same, but the setup and assertions will change.
+In this repository,
+[`src/test/java/com/applitools/UltrafastVisualTest.java`](src/test/java/com/applitools/UltrafastVisualTest.java)
+contains the updated code.
 
-* Rewrite test with Eyes SDK
-* Revisit assertions: they are complicated
-* Rerun original test with changed demo site, and the test still passes!
-* Show how config is declarative and sharable
-* Show how assertions are simplified: "A picture is worth a thousand assertions."
+First, our test needs some new instance variables:
+
+```java
+
+public class UltrafastVisualTest
+{
+    private WebDriver driver;
+    private VisualGridRunner runner;
+    private Eyes eyes;
+
+    // ...
+}
+```
+
+We still need a `WebDriver` instance, but we won't need `WebDriverWait`.
+We will also need a `VisualGridRunner` for running tests in Ultrafast Grid
+and `Eyes` for capturing snapshots.
+
+Second, we need to rewrite our setup.
+Our original test constructed a WebDriver instance based on an input for browser name.
+For the visual test, we can just pick one browser to run locally (such as Chrome)
+and also initialize the Applitools stuff:
+
+```java
+    @BeforeEach
+    public void setUpVisualAI()
+    {
+        // Prepare Eyes and Ultrafast Grid for Selenium WebDriver
+        driver = new ChromeDriver();
+        runner = new VisualGridRunner(new RunnerOptions().testConcurrency(5));
+        eyes = new Eyes(runner);
+        
+        // ...
+    }
+```
+
+Third, we need to configure the browsers and devices we want to run in Ultrafast Grid.
+We can set this up one time in the `@BeforeEach` method so that all tests will run the same targets:
+
+```java
+    @BeforeEach
+    public void setUpVisualAI()
+    {
+        // ...
+        
+        // Initialize Eyes Configuration
+        Configuration config = eyes.getConfiguration();
+
+        // You can get your API key from the Applitools dashboard
+        config.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
+
+        // Create a new batch
+        config.setBatch(new BatchInfo("Modern Cross-Browser Testing Workshop"));
+
+        // Add browsers with different viewports
+        config.addBrowser(800, 600, BrowserType.CHROME);
+        config.addBrowser(700, 500, BrowserType.FIREFOX);
+        config.addBrowser(1600, 1200, BrowserType.IE_11);
+        config.addBrowser(1024, 768, BrowserType.EDGE_CHROMIUM);
+        config.addBrowser(800, 600, BrowserType.SAFARI);
+
+        // Add mobile emulation devices in Portrait mode
+        config.addDeviceEmulation(DeviceName.iPhone_X, ScreenOrientation.PORTRAIT);
+        config.addDeviceEmulation(DeviceName.Pixel_2, ScreenOrientation.PORTRAIT);
+
+        // Set the configuration object to Eyes
+        eyes.setConfiguration(config);
+    }
+```
+
+You will need to set your Applitools API key,
+which you can retrieve from your Applitools account and pass through as an environment variable.
+Then, you can name the batch and specify all the browser and device targets.
+Here, we will test against five desktop browsers and two mobile browsers.
+Notice that you can also set viewport sizes and orientations.
+You can test all the major browsers up to two previous versions,
+and you can test over 60 emulated mobile devices.
+The configuration is concise and declarative.
+
+Test cleanup must be enhanced, too.
+In addition to quitting the browser,
+we should print the test summary to the console.
+This is not required, but it is helpful for logging:
+
+```java
+    @AfterEach
+    public void cleanUpTest()
+    {
+        // Quit the WebDriver instance
+        driver.quit();
+
+        // Report visual differences
+        TestResultsSummary allTestResults = runner.getAllTestResults(true);
+        System.out.println(allTestResults);
+    }
+```
+
+The `login` test method must be updated to capture visual snapshots, too:
+
+```java
+    @Test
+    public void login()
+    {
+        try
+        {
+            // Open Eyes to start visual testing
+            eyes.open(
+                    driver,
+                    "Applitools Demo App",
+                    "Login",
+                    new RectangleSize(800, 600));
+
+            // Run the test steps, but with visual checks
+            loadLoginPage();
+            verifyLoginPage();
+            performLogin();
+            verifyMainPage();
+
+            // Close Eyes to tell the server it should display the results
+            eyes.closeAsync();
+        }
+        finally
+        {
+            // Notify the server if the test aborts
+            eyes.abortAsync();
+        }
+    }
+```
+
+The four methods for test steps remain the same,
+but they are now surrounded by calls to `eyes.open(...)` and `eyes.closeAsync()`.
+The whole block is surrounded by try/catch so that Applitools Eyes can handle any test aborts smoothly.
+
+The `loadLoginPage` and `performLogin` methods do not need any changes because the interactions are the same.
+However, the "verify" methods can reduce drastically:
+
+```java
+    private void verifyLoginPage()
+    {
+        eyes.check(Target.window().fully().withName("Login page"));
+    }
+
+    private void verifyMainPage()
+    {
+        // This snapshot uses LAYOUT match level to avoid differences in
+        // "Your nearest branch closes in: ..." times
+        eyes.check(Target.window().fully().withName("Main page").layout());
+    }
+```
+
+**"A picture is worth a thousand assertions."**
+Previously, these methods had multiple complicated assertions
+that merely checked if some elements appeared or had certain text values.
+Now, Applitools Eyes captures a full snapshot,
+checking *everything* on the page like a pair of human eyes.
+It's one, simple, declarative capture.
+We just say "check it" instead of spending time splicing selectors and making explicit comparisons.
+It also covers aspects like broken images and colors that our traditional functional test missed.
+
+As a software engineer myself,
+I cannot understate how much development time these visual checkpoints save me.
+I spend so much time trying to find locators and program clever assertions,
+but they are so fragile,
+and there are only so many assertions I can include.
 
 
 ### 2.4 Running visual tests across multiple browsers
 
-SCREENSHARE
+Let's run `UltrafastVisualTest` with the original login page to set baselines.
+Make sure to set the `APPLITOOLS_API_KEY` environment variable to your API key.
+When launched locally, you should see one Chrome session open and close within a few seconds.
+Then, the automation uploads the snapshots to Applitools Ultrafast Grid to run against the seven other targets.
+All tests should take about half a minute to complete.
 
-* Run tests using Ultrafast Grid
-* Show Applitools dashboard with baselines and stuff
-* Explain browsers, OS's, versions
-* Show groupings
-* Rerun tests with the changed demo site
-* Determine visual failures
-* Highlight advantages: speed, simplicity, accuracy
+Results in the Applitools Eyes dashboard should look like this:
+
+![Applitools Eyes Dashboard with baselines](images/applitools-dash-baselines.png)
+
+Notice how the batch of tests has one test for each target configuration.
+Each test has two snapshots: one for the login page, and one for the main page.
+All tests have "New" status because they are baselines.
+
+Run the tests again.
+The second run should succeed just like the first.
+However, the new dashboard results now say "Passed"
+because Applitools compared the latest snapshots to the baselines
+and verified that they had not changed.
+You can also group results by browser, OS, and other criteria:
+
+![Applitools Eyes Dashboard with passing tests](images/applitools-dash-passed.png)
+
+To show the power of Visual AI in testing,
+let's run the tests one more time with visual changes to the demo site.
+Set the environment variable `DEMO_SITE=changed`, and rerun.
+This time, changes are detected on the login page!
+Changes are *not* detected on the main page despite different numbers on the page
+because we set the match level to LAYOUT.
+
+![Applitools Eyes Dashboard with unresolved tests](images/applitools-dash-unresolved.png)
+
+We can address these results just like any other visual results.
+
+As you can see, the big advantages of this type of cross-browser testing are:
+
+1. *Speed:* tests take second instead of minutes
+2. *Simplicity:* visual checkpoints replace complicated assertions
+3. *Sharpness:* Visual AI accurately highlights meaningful changes to a human eye
 
 
 ### 2.5 Integrating modern cross-browser testing with CI/CD
 
-SLIDES
-SCREENSHARE (if we include GitHub Actions)
+Just like any other automated test suite,
+visual tests with Applitools Eyes and Ultrafast Grid can (and should)
+run from a Continuous Integration and Delivery (CI/CD) system.
+For example, you can integrate Applitools Eyes with Jenkins using the
+[Jenkins plugin](https://plugins.jenkins.io/applitools-eyes/),
+or you could simply launch tests from an agent's command line as part of a build job.
 
-Lip service about CI/CD integration.
-We have plugins for Jenkins, etc.
-Bring up how slower CBT makes true Continuous Testing tough - it requires tradeoffs.
-Ultrafast Grid shifts testing further left.
+CI/CD systems can trigger tests automatically:
 
-Maybe write GitHub Actions?
+* *continuously* after code changes
+* *periodically* on schedules (like every night)
+* *on demand* whenever users manually launch tests
+
+Ideally, teams want to get as many results as they can as quickly as possible.
+Fast feedback means that teams can resolve issues before they become more costly to fix.
+Unfortunately, traditional UI tests tend to be slow, especially with cross-browser variations.
+Teams face a tradeoff between coverage and fast feedback:
+more coverage means lower risk but slower feedback.
+Modern cross-browser testing with Visual AI and Applitools Ultrafast Grid enables more testing in less time,
+which widens coverage, preserves fast feedback, and enables UI testing to become continuous.
+It shifts testing further left.

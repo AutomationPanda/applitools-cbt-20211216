@@ -119,6 +119,8 @@ public class UltrafastVisualTest
 
     private void verifyMainPage()
     {
+        // This snapshot uses LAYOUT match level to avoid differences in
+        // "Your nearest branch closes in: ..." times
         eyes.check(Target.window().fully().withName("Main page").layout());
     }
 }
